@@ -7,31 +7,34 @@ A fully responsive React web app that provides real-time currency conversion, a 
 ## 🚀 Features
 
 - 🌐 **Live Currency Conversion** using ExchangeRate API
-- 📊 **7-Day Exchange Rate Trend Graph** with Recharts (simulated for demo)
+- 📊 **7-Day Exchange Rate Trend Graph** with Recharts (simulated data for free tier)
 - 💹 **Real-Time Currency Table** for 10 popular currencies
-- 📴 **Offline Mode** with Redux Persist to cache the latest data
-- ❗ **Error Handling and Retry Logic** using Axios interceptors
-- 📱 **Responsive Design** using Tailwind CSS
+- 📴 **Offline Mode** with Redux Persist and `navigator.onLine`
+- 🔁 **Automatic Data Refetching** when the user comes back online
+- ❗ **Retry Logic** for API failures using Axios
+- 📱 **Mobile-Responsive UI** using Tailwind CSS
+- 🔔 **User Notifications** using React Toastify
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **React.js** (with Hooks)
+- **React.js** with Hooks
+- **Vite** (for fast build/dev experience)
 - **Redux Toolkit** + **Redux Persist**
-- **Axios** for API handling
-- **Recharts** for chart rendering
+- **Axios** for API interactions
+- **Recharts** for charts
 - **Tailwind CSS** for styling
-- **React Toastify** (optional) for error notifications
+- **React Toastify** for in-app notifications
 
 ---
 
-## 📦 How to Set Up and Run the Project
+## 📦 How to Set Up and Run the Project (Vite Setup)
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/currency-converter-app.git
+git clone https://github.com/Prasoon321/currency-converter-app.git
 cd currency-converter-app
 ```
 
@@ -43,21 +46,25 @@ npm install
 
 ### 3. Configure Your API Key
 
-Create a `.env` file in the root directory and add your ExchangeRate API key:
+Create a `.env` file in the root of the project and add your [ExchangeRate API](https://www.exchangerate-api.com) key:
 
 ```env
-REACT_APP_EXCHANGE_API_KEY=your_api_key_here
+VITE_EXCHANGE_API_KEY=your_api_key_here
 ```
 
-> You can get a free key from [https://www.exchangerate-api.com](https://www.exchangerate-api.com)
+> ⚠️ Note: Vite requires all environment variables to be prefixed with `VITE_`
 
-### 4. Start the Development Server
+### 4. Run the App in Development Mode
 
 ```bash
-npm start
+npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to view the app.
+Then open your browser and navigate to:
+
+```
+http://localhost:5173
+```
 
 ---
 
@@ -66,42 +73,53 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 ```
 src/
 ├── app/                  # Redux store configuration
-├── components/           # UI Components (Converter, Table, Chart, etc.)
-├── features/             # Redux slice (currencySlice)
+├── components/           # UI components (Converter, TrendChart, etc.)
+├── features/             # Redux slice (currencySlice.js)
 ├── utils/                # Axios instance with retry logic
-├── App.jsx               # Main layout file
-└── index.js              # Entry point
+├── App.jsx               # Main layout and router
+└── main.jsx              # App entry point (Vite)
 ```
 
 ---
 
-## 🧠 Environment Setup Summary
+## 🔄 Offline Mode Behavior
 
-### Required Tools:
-
-- Node.js (v18+ recommended)
-- npm (v9+ recommended)
-
-### Commands Recap:
-
-```bash
-# Install dependencies
-npm install
-
-# Run development server
-npm start
-```
+- Latest fetched data is stored using Redux Persist.
+- When offline, the app uses stored data and shows a yellow warning banner.
+- When reconnected, the app automatically refetches data and shows a success toast.
 
 ---
 
 ## 🧪 Simulated Data for Demo
 
-The 7-day trend chart uses simulated exchange rate data because the free tier of ExchangeRate API does not provide historical data.
+The 7-day trend chart uses hardcoded/simulated data for `USD → INR` because the free tier of ExchangeRate API does **not** support historical trends.
 
-If you want to fetch real historical data, you can use:
+For real historical support, consider:
 
 - [exchangerate.host](https://exchangerate.host)
 - [open-meteo.com](https://open-meteo.com)
+
+---
+
+## ⚙️ Environment Summary
+
+### Required Tools
+
+- Node.js v18+
+- npm v9+
+
+### Commands Summary
+
+```bash
+# Install packages
+npm install
+
+# Run dev server
+npm run dev
+
+# Build for production (optional)
+npm run build
+```
 
 ---
 
@@ -109,8 +127,8 @@ If you want to fetch real historical data, you can use:
 
 Feel free to reach out for questions, contributions, or feedback:
 
-**Your Name**: Prasoon Sengar  
-**Email**: jbprasoon@gmail.com
+**Author**: Prasoon Sengar  
+**Email**: jbprasoon@gmail.com  
 **GitHub**: [github.com/Prasoon321](https://github.com/Prasoon321)
 
 ---
