@@ -4,22 +4,47 @@ import TrendChart from "./components/TrendChart";
 import CurrencyTable from "./components/CurrencyTable";
 import OfflineBanner from "./components/OfflineBanner";
 import { useDispatch } from "react-redux";
-import { setOffline } from "./features/currencySlice";
-import { ToastContainer } from "react-toastify";
+import { setOffline, setRates } from "./features/currencySlice";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const dispatch = useDispatch();
 
-  // Connectivity detection
+  // Connectivity detection + auto refetch when online
   useEffect(() => {
-    const handleOnline = () => dispatch(setOffline(false));
-    const handleOffline = () => dispatch(setOffline(true));
+    const handleOnline = async () => {
+      dispatch(setOffline(false));
+
+      try {
+        const response = await axios.get(
+          `https://v6.exchangerate-api.com/v6/${
+            import.meta.env.VITE_EXCHANGE_API_KEY
+          }/latest/USD`
+        );
+
+        dispatch(
+          setRates({
+            rates: response.data.conversion_rates,
+            time: response.data.time_last_update_utc,
+          })
+        );
+
+        toast.success("🔄 You're back online! Exchange rates updated.");
+      } catch (error) {
+        console.error("Auto-refetch failed:", error);
+        toast.error("⚠️ Back online, but failed to update exchange rates.");
+      }
+    };
+
+    const handleOffline = () => {
+      dispatch(setOffline(true));
+    };
 
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
 
-    // Check once on load
     if (!navigator.onLine) {
       dispatch(setOffline(true));
     }
@@ -50,7 +75,7 @@ function App() {
         <CurrencyTable />
       </div>
 
-      {/* Toasts for error messages */}
+      {/* Toasts for messages */}
       <ToastContainer />
     </div>
   );
